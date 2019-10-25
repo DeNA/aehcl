@@ -2,37 +2,37 @@ package aehcl
 
 import (
 	"net/http"
+
+	"github.com/emahiro/aehcl/gcp"
 )
 
-// NewAEHttpClient is ...
-func NewAEHttpClient(t *http.Transport, token string) *http.Client {
-	return &http.Client{
-		Transport: NewAEHttpTransport(token),
-	}
-}
+var tokenSource = gcp.Token()
 
 // AEHttpTransport ...
 type AEHttpTransport struct {
-	base  http.RoundTripper
-	Token string
+	base http.RoundTripper
 }
 
 // NewAEHttpTransport ...
-func NewAEHttpTransport(token string) *AEHttpTransport {
+func NewAEHttpTransport() *AEHttpTransport {
 	return &AEHttpTransport{
-		base:  http.DefaultClient.Transport,
-		Token: token,
+		base: http.DefaultClient.Transport,
 	}
 }
 
-// RoundTrip ...
+// RoundTrip retrieves token from token source and set it to request header.
 func (t *AEHttpTransport) RoundTrip(ireq *http.Request) (*http.Response, error) {
+	token, err := tokenSource()
+	if err != nil {
+		return nil, err
+	}
+
 	req := new(http.Request)
-	*req = *ireq // shallow clone request
+	*req = *ireq
 
 	if req.Header == nil {
 		req.Header = make(http.Header)
 	}
-	req.Header.Set("Authorization", "Bearer "+t.Token)
+	req.Header.Set("Authorization", "Bearer "+token)
 	return t.base.RoundTrip(req)
 }
