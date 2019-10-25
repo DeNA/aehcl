@@ -8,20 +8,13 @@ import (
 
 var tokenSource = gcp.Token()
 
-// AEHttpTransport ...
-type AEHttpTransport struct {
+// Transport is aehcl transport.
+type Transport struct {
 	base http.RoundTripper
 }
 
-// NewAEHttpTransport ...
-func NewAEHttpTransport() *AEHttpTransport {
-	return &AEHttpTransport{
-		base: http.DefaultClient.Transport,
-	}
-}
-
 // RoundTrip retrieves token from token source and set it to request header.
-func (t *AEHttpTransport) RoundTrip(ireq *http.Request) (*http.Response, error) {
+func (t *Transport) RoundTrip(ireq *http.Request) (*http.Response, error) {
 	token, err := tokenSource()
 	if err != nil {
 		return nil, err
