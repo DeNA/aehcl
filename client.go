@@ -3,7 +3,7 @@ package aehcl
 import (
 	"net/http"
 
-	"github.com/emahiro/aehcl/gcp"
+	"github.com/emahiro/aehcl/internal/gcp"
 )
 
 var tokenSource = gcp.Token()
