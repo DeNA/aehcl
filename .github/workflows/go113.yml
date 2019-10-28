@@ -3,7 +3,7 @@ on: [push]
 jobs:
 
   build:
-    name: Build
+    name: Build in Go1.13
     runs-on: ubuntu-latest
     steps:
 
