@@ -1,16 +1,19 @@
+// package aehcl provides HTTP RoundTripper for authentication service-to-service
+// in Google App Engine.
+
 package aehcl
 
 import (
 	"net/http"
 )
 
-// Transport is aehcl transport.
 type transport struct {
 	base  http.RoundTripper
 	token tokenSource
 }
 
-// Transport ...
+// Transport is an implementation of RoundTripper with TokenSource required authentication service-to-service.
+// If base http RoundTripper is nil, it sets DefaultTransport.
 func Transport(base http.RoundTripper) http.RoundTripper {
 	t := &transport{
 		base:  base,
@@ -22,7 +25,6 @@ func Transport(base http.RoundTripper) http.RoundTripper {
 	return t
 }
 
-// RoundTrip retrieves token from token source and set it to request header.
 func (t *transport) RoundTrip(ireq *http.Request) (*http.Response, error) {
 	token, err := t.token()
 	if err != nil {
