@@ -13,7 +13,7 @@ var idTokenURL = "/instance/service-accounts/default/identity?audience=" + os.Ge
 
 type tokenSource func() (string, error)
 
-func (t *tokenSource) token() tokenSource {
+func token() tokenSource {
 	return func() (string, error) {
 		return fetchToken()
 	}
