@@ -6,6 +6,17 @@
 ## Description
 
 App Engine HTTP Client provides HTTP RoundTripper for authentication service-to-service in Google App Engine.
+This package is inspired by [Authentication Service-to-Service](https://cloud.google.com/run/docs/authenticating/service-to-service)
+
+## Usage
+
+```go
+
+client := &http.Client {
+    Transport: aehcl.Transport(http.DefaultTransport)
+}
+
+```
 
 ## License
 
