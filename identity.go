@@ -9,8 +9,6 @@ import (
 	"golang.org/x/oauth2/google"
 )
 
-var idTokenURL = "/instance/service-accounts/default/identity?audience=" + os.Getenv("GOOGLE_CLOUD_PROJECT")
-
 type tokenSource func() (string, error)
 
 func token() tokenSource {
