@@ -4,16 +4,15 @@ import (
 	"net/http"
 )
 
-var tokenSource = Token()
-
 // Transport is aehcl transport.
 type Transport struct {
-	base http.RoundTripper
+	base  http.RoundTripper
+	token TokenSource
 }
 
 // RoundTrip retrieves token from token source and set it to request header.
 func (t *Transport) RoundTrip(ireq *http.Request) (*http.Response, error) {
-	token, err := tokenSource()
+	token, err := t.token()
 	if err != nil {
 		return nil, err
 	}
