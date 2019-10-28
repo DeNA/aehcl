@@ -36,5 +36,6 @@ func (t *transport) RoundTrip(ireq *http.Request) (*http.Response, error) {
 		req.Header = make(http.Header)
 	}
 	req.Header.Set("Authorization", "Bearer "+token)
+
 	return t.base.RoundTrip(req)
 }
