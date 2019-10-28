@@ -1,6 +1,6 @@
 # App Engine Http Client
 
-[![GoDoc](https://godoc.org/github.com/emahiro/aehcl)](https://godoc.org/github.com/emahiro/aehcl)
+[![GoDoc](https://godoc.org/github.com/emahiro/aehcl?status.svg)](https://godoc.org/github.com/emahiro/aehcl)
 [![Go Report Card](https://goreportcard.com/badge/github.com/emahiro/aehcl)](https://goreportcard.com/report/github.com/emahiro/aehcl)
 
 ## Description
