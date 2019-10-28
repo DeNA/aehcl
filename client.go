@@ -56,21 +56,3 @@ func cloneHeader(h http.Header) http.Header {
 	}
 	return h2
 }
-
-func cloneHeaderV1(h http.Header) http.Header {
-	h2 := make(http.Header, len(h))
-	for k, v := range h {
-		v2 := make([]string, len(v))
-		copy(v2, v)
-		h2[k] = v2
-	}
-	return h2
-}
-
-func cloneHeaderV2(h http.Header) http.Header {
-	h2 := make(http.Header, len(h))
-	for k, v := range h {
-		h2[k] = v
-	}
-	return h2
-}
