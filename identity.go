@@ -11,11 +11,9 @@ import (
 
 var idTokenURL = "/instance/service-accounts/default/identity?audience=" + os.Getenv("GOOGLE_CLOUD_PROJECT")
 
-// TokenSource returns token.
-type TokenSource func() (string, error)
+type tokenSource func() (string, error)
 
-// Token returns function TokenSource implementation.
-func Token() TokenSource {
+func (t *tokenSource) token() tokenSource {
 	return func() (string, error) {
 		return fetchToken()
 	}

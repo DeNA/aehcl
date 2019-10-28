@@ -6,13 +6,13 @@ import (
 
 // Transport is aehcl transport.
 type Transport struct {
-	base  http.RoundTripper
-	token TokenSource
+	base http.RoundTripper
+	ts   tokenSource
 }
 
 // RoundTrip retrieves token from token source and set it to request header.
 func (t *Transport) RoundTrip(ireq *http.Request) (*http.Response, error) {
-	token, err := t.token()
+	token, err := t.ts.token()()
 	if err != nil {
 		return nil, err
 	}
