@@ -2,11 +2,9 @@ package aehcl
 
 import (
 	"net/http"
-
-	"github.com/emahiro/aehcl/internal/gcp"
 )
 
-var tokenSource = gcp.Token()
+var tokenSource = Token()
 
 // Transport is aehcl transport.
 type Transport struct {
