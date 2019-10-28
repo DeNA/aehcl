@@ -17,3 +17,36 @@ func TestRoundTrip(t *testing.T) {
 		t.Fatalf("Authirization is not found. header: %#v", h)
 	}
 }
+
+func Benchmark_cloneHeader(b *testing.B) {
+	header := http.Header{}
+	for i := 0; i < 10000; i++ {
+		header.Add(string(i), string(i))
+	}
+
+	for i := 0; i < b.N; i++ {
+		cloneHeader(header)
+	}
+}
+
+func Benchmark_cloneHeaderV1(b *testing.B) {
+	header := http.Header{}
+	for i := 0; i < 10000; i++ {
+		header.Add(string(i), string(i))
+	}
+
+	for i := 0; i < b.N; i++ {
+		cloneHeaderV1(header)
+	}
+}
+
+func Benchmark_cloneHeaderV2(b *testing.B) {
+	header := http.Header{}
+	for i := 0; i < 10000; i++ {
+		header.Add(string(i), string(i))
+	}
+
+	for i := 0; i < b.N; i++ {
+		cloneHeaderV2(header)
+	}
+}
