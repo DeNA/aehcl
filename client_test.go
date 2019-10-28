@@ -17,7 +17,7 @@ func TestRoundTrip(t *testing.T) {
 			arg:  Transport(http.DefaultTransport),
 			handler: http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 				if h := r.Header.Get("Authorization"); h == "" {
-					t.Fatalf("Authroization Header is required")
+					t.Fatalf("Authorization Header is required")
 				}
 			}),
 		},
@@ -26,7 +26,7 @@ func TestRoundTrip(t *testing.T) {
 			arg:  &http.Transport{},
 			handler: http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 				if h := r.Header.Get("Authorization"); h != "" {
-					t.Fatalf("Authroization Header is exist. header: %v", h)
+					t.Fatalf("Authorization Header is exist. header: %v", h)
 				}
 			}),
 		},
