@@ -21,16 +21,16 @@ func token() tokenSource {
 
 func fetchToken() (string, error) {
 	// get idToken from metadata of gcp
-	idToken, err := fetchIDToken()
-	if err != nil || idToken == "" {
-		// get accesstoken from local `GOOGLE_APPLICATION_CREDENTIALS`
-		lat, err := fetchLocalAccessToken()
-		if err != nil {
-			return "", err
-		}
-		return lat, nil
+	if idToken, err := fetchIDToken(); err == nil {
+		return idToken, nil
 	}
-	return idToken, nil
+
+	// get accesstoken from local `GOOGLE_APPLICATION_CREDENTIALS`
+	lat, err := fetchLocalAccessToken()
+	if err != nil {
+		return "", err
+	}
+	return lat, nil
 }
 
 func fetchIDToken() (string, error) {
