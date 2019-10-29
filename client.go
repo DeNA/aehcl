@@ -10,8 +10,7 @@ type transport struct {
 }
 
 // Transport is an implementation of http.RoundTripper for App Engine.
-// Users should generally create an http.Client using this transport required
-// service-to-service authentication.
+// When required service-to-service authentication, create http.Client using this transport.
 // If base http RoundTripper is nil, it sets http.DefaultTransport.
 func Transport(base http.RoundTripper) http.RoundTripper {
 	t := &transport{
