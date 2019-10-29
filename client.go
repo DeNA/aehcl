@@ -8,16 +8,14 @@ import (
 )
 
 type transport struct {
-	base  http.RoundTripper
-	token tokenSource
+	base http.RoundTripper
 }
 
 // Transport is an implementation of RoundTripper with TokenSource required authentication service-to-service.
 // If base http RoundTripper is nil, it sets DefaultTransport.
 func Transport(base http.RoundTripper) http.RoundTripper {
 	t := &transport{
-		base:  base,
-		token: token(),
+		base: base,
 	}
 	if base == nil {
 		t.base = http.DefaultTransport
@@ -41,6 +39,10 @@ func (t *transport) RoundTrip(ireq *http.Request) (*http.Response, error) {
 	req.Header.Set("Authorization", "Bearer "+token)
 
 	return t.base.RoundTrip(req)
+}
+
+func (t *transport) token() (string, error) {
+	return fetchToken()
 }
 
 func cloneHeader(h http.Header) http.Header {

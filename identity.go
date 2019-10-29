@@ -9,14 +9,6 @@ import (
 	"golang.org/x/oauth2/google"
 )
 
-type tokenSource func() (string, error)
-
-func token() tokenSource {
-	return func() (string, error) {
-		return fetchToken()
-	}
-}
-
 func fetchToken() (string, error) {
 	// get idToken from metadata of gcp
 	if idToken, err := fetchIDToken(); err == nil {
