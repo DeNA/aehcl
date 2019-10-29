@@ -23,9 +23,16 @@ func Transport(base http.RoundTripper) http.RoundTripper {
 	return t
 }
 
-// RoundTrip is service-to-service authentication implementation.
-// It fetchs idToken(in remote) or accessToken(in local), and copy request with Authorization
-// Header which is setted the token.
+// RoundTrip fetchs IDToken(in remote) or LocalAccessToken(in local), copies request, and set
+// the token to Authorization Header.
+// LocalAccessToken is same result as `gcloud auth print-access-token` output.
+//
+// If Users want to use this package, the following implementation is required on remote server.
+//
+// 		token := extractToken(r.Header.Get("Authorization"))
+// 		if !verifyToken(token) {
+//			return fmt.Errorf("failed to verify token")
+// 		}
 func (t *transport) RoundTrip(ireq *http.Request) (*http.Response, error) {
 	token, err := t.token()
 	if err != nil {
