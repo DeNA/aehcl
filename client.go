@@ -2,27 +2,32 @@
 package aehcl
 
 import (
+	"fmt"
 	"net/http"
 )
 
-// TokenSource is interface of function returns token required service-to-service authentication in App Engine.
-type TokenSource func() (string, error)
+// TokenSourceOption is interface of function returns token required service-to-service authentication in App Engine.
+type TokenSourceOption func() (string, error)
 
 type transport struct {
 	base http.RoundTripper
-	ts   TokenSource
+	opts []TokenSourceOption
 }
 
 // Transport is an implementation of http.RoundTripper for service-to-service authentication.
 // When required service-to-service authentication, create http.Client using this transport.
-// If base http RoundTripper is nil, http.DefaultTransport is assigned.
-func Transport(base http.RoundTripper, ts TokenSource) http.RoundTripper {
+//
+// Default RoundTripper is http.DefaultTransport, and Default TokenSourceOption is FetchIDToken.
+func Transport(base http.RoundTripper, opts ...TokenSourceOption) http.RoundTripper {
 	t := &transport{
 		base: base,
-		ts:   ts,
+		opts: opts,
 	}
 	if base == nil {
 		t.base = http.DefaultTransport
+	}
+	if opts == nil {
+		t.opts = append(t.opts, FetchIDToken)
 	}
 	return t
 }
@@ -52,7 +57,12 @@ func (t *transport) RoundTrip(ireq *http.Request) (*http.Response, error) {
 }
 
 func (t *transport) token() (string, error) {
-	return t.ts()
+	for _, opt := range t.opts {
+		if token, _ := opt(); token != "" {
+			return token, nil
+		}
+	}
+	return "", fmt.Errorf("failed to token from tokenSrouce. opts: %#v", t.opts)
 }
 
 func cloneHeader(h http.Header) http.Header {
