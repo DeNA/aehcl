@@ -22,16 +22,15 @@ func Transport(base http.RoundTripper) http.RoundTripper {
 	return t
 }
 
-// RoundTrip fetchs IDToken(in remote) or LocalAccessToken(in local), copies request, and set
-// the token to Authorization Header.
-// LocalAccessToken is same result as `gcloud auth print-access-token` output.
+// RoundTrip issues a request with identity token required service-to-service authentication described in
+// https://cloud.google.com/run/docs/authenticating/service-to-service.
+// When failed to obtain the identity token from metadata API (e.g. in local environment), uses access token generated
+// from service account credentials.
 //
-// If Users want to use this package, the following implementation is required on remote server.
-//
-// 		token := extractToken(r.Header.Get("Authorization"))
-// 		if !verifyToken(token) {
-//			return fmt.Errorf("failed to verify token")
-// 		}
+// If uses service-to-serivce authentication, server that receives the request must be implemented to validate the token
+// added to Authorization header.
+// In case of identity token, verify the identity token using the public key provided by Google.
+// In case of access token, check the access token has permission to execute some operation requested by the receiver.
 func (t *transport) RoundTrip(ireq *http.Request) (*http.Response, error) {
 	token, err := t.token()
 	if err != nil {
