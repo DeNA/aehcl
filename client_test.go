@@ -11,7 +11,6 @@ func TestRoundTrip(t *testing.T) {
 	tests := []struct {
 		name    string
 		arg     http.RoundTripper
-		ts      func() (string, error)
 		handler http.Handler
 	}{
 		{
