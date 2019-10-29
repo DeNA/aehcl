@@ -17,7 +17,7 @@ type transport struct {
 // Transport is an implementation of http.RoundTripper for service-to-service authentication.
 // When required service-to-service authentication, create http.Client using this transport.
 //
-// Default RoundTripper is http.DefaultTransport, and Default TokenSourceOption is FetchIDToken.
+// Default RoundTripper is http.DefaultTransport, and default TokenSourceOption is FetchIDToken.
 func Transport(base http.RoundTripper, opts ...TokenSourceOption) http.RoundTripper {
 	t := &transport{
 		base: base,
