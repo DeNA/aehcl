@@ -9,7 +9,7 @@ type transport struct {
 	base http.RoundTripper
 }
 
-// Transport is an implementation of RoundTripper with TokenSource required authentication service-to-service.
+// Transport is an implementation of RoundTripper required service-to-service authentication.
 // If base http RoundTripper is nil, it sets DefaultTransport.
 func Transport(base http.RoundTripper) http.RoundTripper {
 	t := &transport{
