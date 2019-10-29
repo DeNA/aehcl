@@ -13,9 +13,9 @@ type transport struct {
 	ts   TokenSource
 }
 
-// Transport is an implementation of http.RoundTripper for App Engine.
+// Transport is an implementation of http.RoundTripper for service-to-service authentication.
 // When required service-to-service authentication, create http.Client using this transport.
-// If base http RoundTripper is nil, it sets http.DefaultTransport.
+// If base http RoundTripper is nil, http.DefaultTransport is assigned.
 func Transport(base http.RoundTripper, ts TokenSource) http.RoundTripper {
 	t := &transport{
 		base: base,
@@ -31,8 +31,8 @@ func Transport(base http.RoundTripper, ts TokenSource) http.RoundTripper {
 // https://cloud.google.com/run/docs/authenticating/service-to-service.
 // When failed to obtain the identity token from metadata API (e.g. in local environment), RoundTrip returns error.
 //
-// If uses service-to-serivce authentication, server that receives the request must be implemented to validate the identity
-// token added to Authorization header using the public key provided by Google.
+// If uses service-to-serivce authentication, server that receives the request must be implemented to validate the
+// identity token added to Authorization header using the public key provided by Google.
 func (t *transport) RoundTrip(ireq *http.Request) (*http.Response, error) {
 	token, err := t.token()
 	if err != nil {
