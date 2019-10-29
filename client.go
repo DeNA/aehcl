@@ -1,6 +1,4 @@
-// package aehcl provides HTTP RoundTripper for authentication service-to-service
-// in Google App Engine.
-
+// Package aehcl provides service-to-service authentication in Google App Engine.
 package aehcl
 
 import (
