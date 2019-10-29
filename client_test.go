@@ -39,6 +39,8 @@ func TestRoundTrip(t *testing.T) {
 				Transport: tt.arg,
 			}
 			server := httptest.NewServer(tt.handler)
+			defer server.Close()
+
 			client.Get(server.URL)
 		})
 	}

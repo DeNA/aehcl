@@ -9,21 +9,13 @@ import (
 	"golang.org/x/oauth2/google"
 )
 
-type tokenSource func() (string, error)
-
-func token() tokenSource {
-	return func() (string, error) {
-		return fetchToken()
-	}
-}
-
 func fetchToken() (string, error) {
-	// get idToken from metadata of gcp
-	if idToken, err := fetchIDToken(); err == nil {
-		return idToken, nil
+	// fetch idToken from metadata of gcp
+	if idt, err := fetchIDToken(); err == nil {
+		return idt, nil
 	}
 
-	// get accesstoken from local `GOOGLE_APPLICATION_CREDENTIALS`
+	// fetch accesstoken from local `GOOGLE_APPLICATION_CREDENTIALS`
 	lat, err := fetchLocalAccessToken()
 	if err != nil {
 		return "", err
