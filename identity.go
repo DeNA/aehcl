@@ -11,8 +11,8 @@ import (
 
 func fetchToken() (string, error) {
 	// get idToken from metadata of gcp
-	if idToken, err := fetchIDToken(); err == nil {
-		return idToken, nil
+	if idt, err := fetchIDToken(); err == nil {
+		return idt, nil
 	}
 
 	// get accesstoken from local `GOOGLE_APPLICATION_CREDENTIALS`
