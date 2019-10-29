@@ -5,16 +5,21 @@ import (
 	"net/http"
 )
 
+// TokenSource is interface of function returns token required service-to-service authentication in App Engine.
+type TokenSource func() (string, error)
+
 type transport struct {
 	base http.RoundTripper
+	ts   TokenSource
 }
 
 // Transport is an implementation of http.RoundTripper for App Engine.
 // When required service-to-service authentication, create http.Client using this transport.
 // If base http RoundTripper is nil, it sets http.DefaultTransport.
-func Transport(base http.RoundTripper) http.RoundTripper {
+func Transport(base http.RoundTripper, ts TokenSource) http.RoundTripper {
 	t := &transport{
 		base: base,
+		ts:   ts,
 	}
 	if base == nil {
 		t.base = http.DefaultTransport
@@ -47,7 +52,7 @@ func (t *transport) RoundTrip(ireq *http.Request) (*http.Response, error) {
 }
 
 func (t *transport) token() (string, error) {
-	return fetchIDToken()
+	return t.ts()
 }
 
 func cloneHeader(h http.Header) http.Header {

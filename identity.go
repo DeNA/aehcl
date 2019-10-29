@@ -6,6 +6,7 @@ import (
 	"cloud.google.com/go/compute/metadata"
 )
 
-func fetchIDToken() (string, error) {
+// FetchIDToken returns identity token from metadata API.
+func FetchIDToken() (string, error) {
 	return metadata.Get("/instance/service-accounts/default/identity?audience=" + os.Getenv("GOOGLE_CLOUD_PROJECT"))
 }
