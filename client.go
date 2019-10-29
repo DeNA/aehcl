@@ -9,8 +9,10 @@ type transport struct {
 	base http.RoundTripper
 }
 
-// Transport is an implementation of RoundTripper required service-to-service authentication.
-// If base http RoundTripper is nil, it sets DefaultTransport.
+// Transport is an implementation of http.RoundTripper for App Engine.
+// Users should generally create an http.Client using this transport required
+// service-to-service authentication.
+// If base http RoundTripper is nil, it sets http.DefaultTransport.
 func Transport(base http.RoundTripper) http.RoundTripper {
 	t := &transport{
 		base: base,
@@ -21,6 +23,9 @@ func Transport(base http.RoundTripper) http.RoundTripper {
 	return t
 }
 
+// RoundTrip is service-to-service authentication implementation.
+// It fetchs idToken(in remote) or accessToken(in local), and copy request with Authorization
+// Header which is setted the token.
 func (t *transport) RoundTrip(ireq *http.Request) (*http.Response, error) {
 	token, err := t.token()
 	if err != nil {
