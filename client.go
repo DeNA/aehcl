@@ -8,24 +8,34 @@ import (
 // TokenSource is function that returns token required service-to-service authentication in App Engine.
 type TokenSource func() (string, error)
 
-// Option is function that adds transport option required service-to-service authentication.
-type Option func(*option)
+// Option is interface that sets transport option required service-to-service authentication.
+type Option interface {
+	apply(*option)
+}
 
 type option struct {
 	token TokenSource
 }
 
-// WithTokenSource sets token source required service-to-service authentication to transport option.
-func WithTokenSource(ts TokenSource) Option {
-	return func(o *option) {
-		o.token = ts
+type funcOption struct {
+	f func(*option)
+}
+
+func newFuncOption(f func(*option)) *funcOption {
+	return &funcOption{
+		f: f,
 	}
 }
 
-func (o *option) apply(opts []Option) {
-	for _, opt := range opts {
-		opt(o)
-	}
+func (fo *funcOption) apply(opt *option) {
+	fo.f(opt)
+}
+
+// WithTokenSource sets token source required service-to-service authentication to transport option.
+func WithTokenSource(ts TokenSource) Option {
+	return newFuncOption(func(o *option) {
+		o.token = ts
+	})
 }
 
 type transport struct {
@@ -39,7 +49,9 @@ type transport struct {
 // Default RoundTripper is http.DefaultTransport, and FetchIDToken is assigned as default option.
 func Transport(base http.RoundTripper, opts ...Option) http.RoundTripper {
 	opt := &option{token: FetchIDToken}
-	opt.apply(opts)
+	for _, o := range opts {
+		o.apply(opt)
+	}
 
 	t := &transport{
 		base:  base,
