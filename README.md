@@ -19,7 +19,7 @@ go get github.com/emahiro/aehcl
 ```go
 
 client := &http.Client {
-    Transport: aehcl.Transport(http.DefaultTransport, aehcl.FetchIDToken)
+    Transport: aehcl.Transport(http.DefaultTransport, aehcl.WithTokenSource(aehcl.FetchIDToken))
 }
 
 ```
