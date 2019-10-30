@@ -2,16 +2,35 @@
 package aehcl
 
 import (
-	"fmt"
 	"net/http"
 )
 
-// TokenSourceOption is interface of function returns token required service-to-service authentication in App Engine.
-type TokenSourceOption func() (string, error)
+// TokenSource is interface of function returns token required service-to-service authentication in App Engine.
+type TokenSource func() (string, error)
+
+// TokenSourceOption is interface of function that sets token source required service-to-service authentication.
+type TokenSourceOption func(*tokenSourceOption)
+
+type tokenSourceOption struct {
+	token TokenSource
+}
+
+// WithTokenSource sets token source required service-to-service authentication to tokenSourceOption.
+func WithTokenSource(ts TokenSource) TokenSourceOption {
+	return func(o *tokenSourceOption) {
+		o.token = ts
+	}
+}
+
+func (o *tokenSourceOption) apply(opts []TokenSourceOption) {
+	for _, opt := range opts {
+		opt(o)
+	}
+}
 
 type transport struct {
-	base http.RoundTripper
-	opts []TokenSourceOption
+	base  http.RoundTripper
+	token TokenSource
 }
 
 // Transport is an implementation of http.RoundTripper for service-to-service authentication.
@@ -19,15 +38,15 @@ type transport struct {
 //
 // Default RoundTripper is http.DefaultTransport, and default TokenSourceOption is FetchIDToken.
 func Transport(base http.RoundTripper, opts ...TokenSourceOption) http.RoundTripper {
+	opt := &tokenSourceOption{token: FetchIDToken}
+	opt.apply(opts)
+
 	t := &transport{
-		base: base,
-		opts: opts,
+		base:  base,
+		token: opt.token,
 	}
 	if base == nil {
 		t.base = http.DefaultTransport
-	}
-	if opts == nil {
-		t.opts = append(t.opts, FetchIDToken)
 	}
 	return t
 }
@@ -54,15 +73,6 @@ func (t *transport) RoundTrip(ireq *http.Request) (*http.Response, error) {
 	req.Header.Set("Authorization", "Bearer "+token)
 
 	return t.base.RoundTrip(req)
-}
-
-func (t *transport) token() (string, error) {
-	for _, opt := range t.opts {
-		if token, _ := opt(); token != "" {
-			return token, nil
-		}
-	}
-	return "", fmt.Errorf("failed to token from tokenSrouce. opts: %#v", t.opts)
 }
 
 func cloneHeader(h http.Header) http.Header {

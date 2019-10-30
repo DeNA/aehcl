@@ -1,7 +1,6 @@
 package aehcl
 
 import (
-	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -15,7 +14,7 @@ func TestRoundTrip(t *testing.T) {
 	}{
 		{
 			name: "success to get authorization header",
-			arg:  Transport(http.DefaultTransport, FetchIDToken),
+			arg:  Transport(http.DefaultTransport, WithTokenSource(FetchIDToken)),
 			handler: http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 				if h := r.Header.Get("Authorization"); h == "" {
 					t.Fatalf("Authorization Header is required")
@@ -28,17 +27,6 @@ func TestRoundTrip(t *testing.T) {
 			handler: http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 				if h := r.Header.Get("Authorization"); h != "" {
 					t.Fatalf("Authorization Header is exist. header: %v", h)
-				}
-			}),
-		},
-		{
-			name: "faield to get idToken",
-			arg: Transport(http.DefaultTransport, func() (string, error) {
-				return "", fmt.Errorf("hoge")
-			}),
-			handler: http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-				if r != nil {
-					t.Fatalf("request should be failed")
 				}
 			}),
 		},
