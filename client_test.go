@@ -14,7 +14,16 @@ func TestRoundTrip(t *testing.T) {
 	}{
 		{
 			name: "success to get authorization header",
-			arg:  Transport(http.DefaultTransport),
+			arg:  Transport(http.DefaultTransport, WithTokenSource(FetchIDToken)),
+			handler: http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+				if h := r.Header.Get("Authorization"); h == "" {
+					t.Fatalf("Authorization Header is required")
+				}
+			}),
+		},
+		{
+			name: "success to get authorization header in empty options",
+			arg:  Transport(http.DefaultTransport, []Option{}...),
 			handler: http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 				if h := r.Header.Get("Authorization"); h == "" {
 					t.Fatalf("Authorization Header is required")
