@@ -5,10 +5,10 @@ import (
 	"net/http"
 )
 
-// TokenSource is interface of function returns token required service-to-service authentication in App Engine.
+// TokenSource is function that returns token required service-to-service authentication in App Engine.
 type TokenSource func() (string, error)
 
-// Option is interface of function adds transport option required service-to-service authentication.
+// Option is function that adds transport option required service-to-service authentication.
 type Option func(*option)
 
 type option struct {
