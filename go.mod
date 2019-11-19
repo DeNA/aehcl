@@ -1,4 +1,4 @@
-module github.com/emahiro/aehcl
+module github.com/DeNA/aehcl
 
 go 1.12
 

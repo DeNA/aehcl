@@ -1,7 +1,7 @@
 # App Engine Http Client
 
-[![GoDoc](https://godoc.org/github.com/emahiro/aehcl?status.svg)](https://godoc.org/github.com/emahiro/aehcl)
-[![Go Report Card](https://goreportcard.com/badge/github.com/emahiro/aehcl)](https://goreportcard.com/report/github.com/emahiro/aehcl)
+[![GoDoc](https://godoc.org/github.com/DeNA/aehcl?status.svg)](https://godoc.org/github.com/DeNA/aehcl)
+[![Go Report Card](https://goreportcard.com/badge/github.com/DeNA/aehcl)](https://goreportcard.com/report/github.com/DeNA/aehcl)
 
 ## Description
 
@@ -11,7 +11,7 @@ This package is inspired by [Authentication Service-to-Service](https://cloud.go
 ## Installation
 
 ```sh
-go get github.com/emahiro/aehcl
+go get github.com/DeNA/aehcl
 ```
 
 ## Usage
